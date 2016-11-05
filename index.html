@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Simon</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+<div class="container">
+<div class="row">
+    <div class="jumbotron" id="gameBoard">
+
+
+        <h1 style="text-align: center">Simon</h1>
+
+        <button class="btn btn-block btn-primary gamepiece" id="4" value='4'></button>
+        <button class="btn btn-block btn-danger gamepiece" id="3" value='3'></button>
+        <button class="btn btn-block btn-warning gamepiece" id="2" value='2'></button>
+        <button class="btn btn-block btn-success gamepiece" id="1" value='1'></button>
+
+
+    </div>
+    <div class="jumbotron" id="controlBoard">
+        <h6 style="text-align: center">Control Board</h6>
+        <button class="btn btn-info btn-outline-info" id="resetBtn">New Game</button>
+        <button class="btn btn-danger btn-outline-danger" id="strictBtn">Strict</button>
+    </div>
+
+</div>
+    </div>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

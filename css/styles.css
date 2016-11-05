@@ -1,0 +1,27 @@
+#resetbtn{
+    margin-top: 2em;
+}
+
+#gameBoard{
+    padding: 1em;
+    width: 400px;
+    background-color: #4a4a4a;
+}
+#controlBoard {
+    width: 400px;
+    background-color: #4a4a4a;
+}
+#controlBoard .btn{
+    width: 175px;
+    height: 3em;
+    text-align: center;
+
+}
+
+.gamepiece{
+    position: relative;
+    width:175px;
+    height: 175px;
+    margin: 2px;
+    float: right;
+}

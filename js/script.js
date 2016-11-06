@@ -3,10 +3,17 @@
  */
 
 // init vars
-var game_turn = 0;
+// game_turn keeps track of the game turn, initial value of 0 max value of 19
+var game_turn = 2;
+// used to set up the sequence of each game
 var game_sequence = [];
+//used to track the players turn reset at the end of each player turn
 var player_sequence = [];
-var game_mode='';
+// variable enables the strict game mode, IE if true player mistake ends game and resets
+// if false player mistake ends turn and displays sequence again
+var strict=false;
+// player
+var player_clicks = 0;
 
 // function to create an array of length 20 that the game will play out
 function getRandomizer(bottom, top) {
@@ -20,87 +27,103 @@ function createGame() {
         game_sequence.push(k);
     }
     console.log(game_sequence);
+    alert("Ready for a New Game?");
+    simon_says();
 }
 //function to reset the game for a start over, called from reset button and when a strict game has a failed test
 function resetGame(){
     game_mode='';
     player_sequence=[];
     game_sequence=[];
+    player_clicks = 0;
     createGame();
 }
-// logic to complete the turn after players click
-function player_turn(id){
+// logic to complete the turn after each player click
+// test click number against game array to make sure the button matches the the game array
+// if the player click the right button continue
+// if the player clicks the wrong button through an error based on game mode
+// strict = true game starts over, strict = false turn starts over
+// display message to let player know results
+function player_turn(id) {
     // function will take in button click of player
     // add click to player sequence
+
     player_sequence.push(parseInt(id));
+    player_clicks++;
+    // console.log(game_sequence);
+    // console.log(player_sequence);
+    // console.log(player_clicks);
+    // console.log(game_turn);
     // compare player_sequence to the game_sequence array
-    // since this is checked each turn i only need to check if the last entry matches
-    if (player_sequence[game_turn] != game_sequence[game_turn] && game_mode == 'strict') {
+    // since this is checked each click i only need to check if the last entry matches
+    console.log("Player sequence = " + player_sequence);
+    console.log("game sequence = " + game_sequence);
+    console.log("game turn = " + game_turn);
+    console.log("player_clicks = " + player_clicks);
+    if (player_sequence[player_clicks - 1] != game_sequence[player_clicks - 1] && strict == true) {
+        player_clicks = 0;
+        player_sequence= [];
         resetGame();
-        console.log("you lost noob, game has reset");
-    } else {
+        alert("you lost noob, game has reset");
+    } else if (player_sequence[player_clicks - 1] != game_sequence[player_clicks - 1] && strict == false){
+        alert("Incorrect noob... Try Again!");
+        player_clicks = 0;
+        player_sequence = [];
+        simon_says();
+
+    }
+    else if (player_clicks == game_turn){
+        player_sequence = [];
+        player_clicks = 0;
         game_turn++;
-        computer_turn()
+        simon_says();
     }
+}
+
+// this is the function that will run the display turn so simon can show the player the sequence
+function simon_says() {
+    //console.log("Simon Says")
+    // this code will display the computers turn to the user
+    var i = 0, howManyTimes = game_turn;
+    function flicker() {
+       var value = game_sequence[i];
+       console.log("Simon Says push button number: " + value);
+       var $btn = $("#" + value);
+       $btn.animate({opacity: '0.2'}, 500).delay(200).animate({opacity: '1'}, 850);
+        i++;
+        if (i < howManyTimes){
+            setTimeout(flicker, 2500)
+        }
     }
-function computer_turn(){
-
+    flicker();
 }
-//function to light a button
-function light_button(value){
-    var sim_btn = '#'+ value;
-    $(sim_btn).flash( '255,0,0', 1000 );
-}
-function play_sound(value){
-    // play simonsound(value).mp3
-    fileLoc = "./media/simonSound" + value + ".mp3";
-    var audio = new Audio(fileLoc);
-    console.log(audio);
-    audio.play();
-}
-// a function to display the lighted buttons in the sequence in the
-// game sequence array
-function display_sequence(){
-     for (var i = 0; i < game_turn; i++){
-         light_button(game_sequence[i]);
-         play_sound(game_sequence[i]);
-     }
-}
-function setStrict(){
-    game_mode = 'strict';
-}
-jQuery.fn.flash = function( color, duration ) {
-    var current = this.css( 'color' );
-    this.animate( { color: 'rgb(' + color + ')' }, duration / 2 );
-    this.animate( { color: current }, duration / 2 );
-}
-
-
-document.getElementById("4").addEventListener("click", function(){
-    play_sound(this.value);
-    player_turn(this.value);
+// event listener for the 4 game game buttons (gamebtn)
+$('.gamebtn').click(function(e){
+    var $btnId = e.target['id'];
+    player_turn($btnId);
+    console.log("you clicked button number " + $btnId);
 });
-document.getElementById("3").addEventListener("click", function(){
-    play_sound(this.value);
-    player_turn(this.value);
-});
-document.getElementById("2").addEventListener("click", function(){
-    play_sound(this.value);
-    player_turn(this.value);
-});
-document.getElementById("1").addEventListener("click", function(){
-    play_sound(this.value);
-    player_turn(this.value);
-});
-document.getElementById("resetBtn").addEventListener("click", function(){
-    resetGame();
-});
-document.getElementById("strictBtn").addEventListener("click", function(){
-    setStrict();
-});
+// event listener for the control btns (controlbtn)
+$('.controlbtn').click(function(e){
+    var $btnId = e.target['id'];
+    if ($btnId == "reset"){
+        resetGame();
+    }
+    if ($btnId == "strict"){
+        var $togs = $('#strict').html();
+        if ($togs == 'Strict On'){
+            strict = false;
+            $('#strict').html("Strict Off");
+        }
+        if ($togs == 'Strict Off'){
+            strict = true;
+            $('#strict').html("Strict On");
+        }
+    }
+    });
 
 // create a new game after document finishes loading
-document.addEventListener("load", function(){
+$('document').ready(function(){
     console.log("simon");
     createGame();
 });
